@@ -120,11 +120,17 @@ int const cPinsNo = 5;
 // Number of pins in the row array
 int const rPinsNo = 4;
 
-// number of milliseconds before/after simulating a key press/release
-int const keypressDelay = 100;
+// number of milliseconds after simulating a key press/release
+int const keypressDelay = 50;
 
-// number of milliseconds before/after simulating a key modifier press/release
+// number of milliseconds after simulating a key press/release
+int const keyreleaseDelay = 50;
+
+// number of milliseconds before/after simulating a key modifier press
 int const modifierDelay = 50;
+
+// number of milliseconds before simulating a key modifier release
+int const modifierreleaseDelay = 50;
 
 
 // number of milliseconds delay between each keyboard column strobe, to minimise capacitive coupling noise
@@ -141,28 +147,26 @@ int colPrev[cPinsNo][rPinsNo] = { 0 };
 
 
 
-// Key Codes and Modifiers
+// buttons
 //
-// Keycodes are the alphanumeric keys - the main keys - on a keyboard.
-// Modifiers are the shift/alt/ctrl key combinations that precede the key press (and released after the key release)
+// Buttons have 3 attributes:
+// keyCode      : physical key-code value
+// modifierCode : Keyboard modifier key to be pressed before the keyCode (can be 0) 
+// repeat       : boolean - if true, then the keycode press is repeated as fast as possible.
 //
-// Key codes to be used for each button
-// (see table above for codes to use)
-// Note: a buttonCode of zero means no keyboard button is pressed (though the key modifier can be)
-uint8_t const buttonCodes[cPinsNo][rPinsNo] = {
-  { 'a', KEY_F7, '-', '5' },
-  { KEY_F3, KEY_F8, '=', '6' },
-  { KEY_F4, '9', KEY_LEFT_ARROW, '8' },
-  { KEY_F5, KEY_UP_ARROW, KEY_DOWN_ARROW, '1' },
-  { 0, 0, 0, 0 }
-};
+typedef struct
+{
+  uint8_t keyCode;
+  uint8_t modifierCode;
+  bool    repeat;
+} buttons;
 
-uint8_t const modifierCodes[cPinsNo][rPinsNo] = {
-  { KEY_LEFT_SHIFT, 0, 0, KEY_LEFT_SHIFT },
-  { 0, 0, 0, KEY_LEFT_ALT },
-  { 0, 0, 0, 0 },
-  { 0, 0, 0, 0 },
-  { 0, 0, 0, 0 }
+buttons const Codes[cPinsNo][rPinsNo] = {
+  { {'a', KEY_LEFT_SHIFT, false}, {'b', 0, true},  {'c', KEY_LEFT_ALT, false}, {'d', 0, false} },
+  { {'e', KEY_LEFT_SHIFT, false}, {'f', 0, false}, {'g', KEY_LEFT_ALT, false}, {'h', 0, false} },
+  { {'i', KEY_LEFT_SHIFT, false}, {'j', 0, false}, {'k', KEY_LEFT_ALT, false}, {'l', 0, false} },
+  { {'m', KEY_LEFT_SHIFT, false}, {'n', 0, false}, {'o', KEY_LEFT_ALT, false}, {'p', 0, false} },
+  { {'q', KEY_LEFT_SHIFT, false}, {'r', 0, false}, {'s', KEY_LEFT_ALT, false}, {'t', 0, false} }
 };
 
 void setup()
@@ -221,32 +225,41 @@ void loop()
           Serial.print(cPins[cPin]);
           Serial.print(", ");
           Serial.print(rPins[rPin]);
-          Serial.println(" ON");
+          Serial.println(" ON : ");
+          Serial.print(Codes[cPin][rPin].keyCode);
 #endif
           // Press the keyboard modifier, if applicable
-          if (modifierCodes[cPin][rPin] != 0)
+          if (Codes[cPin][rPin].modifierCode != 0)
           {
-            Keyboard.press(modifierCodes[cPin][rPin]);
+            Keyboard.press(Codes[cPin][rPin].modifierCode);
             delay(modifierDelay);
           }
 
-          if (buttonCodes[cPin][rPin] != 0)
+          if (Codes[cPin][rPin].keyCode != 0)
           {
             // Press and release the keyboard button
-            Keyboard.press(buttonCodes[cPin][rPin]);
+            Keyboard.press(Codes[cPin][rPin].keyCode);
             delay(keypressDelay);
-            Keyboard.release(buttonCodes[cPin][rPin]);
+            Keyboard.release(Codes[cPin][rPin].keyCode);
+            delay(keyreleaseDelay);
           }
 
           // Release the keyboard modifier, if applicable
-          if (modifierCodes[cPin][rPin] != 0)
+          if (Codes[cPin][rPin].modifierCode != 0)
           {
-            delay(modifierDelay);
-            Keyboard.release(modifierCodes[cPin][rPin]);
+            delay(modifierreleaseDelay);
+            Keyboard.release(Codes[cPin][rPin].modifierCode);
           }
 
           // Update last known state of this switch
-          colPrev[cPin][rPin] = 1;
+          if (Codes[cPin][rPin].repeat == true)
+          {
+            // do nothing
+          }
+          else
+          {
+              colPrev[cPin][rPin] = 1;
+          }
         }
       }
       else
