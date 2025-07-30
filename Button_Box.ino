@@ -27,6 +27,10 @@
  *    6) Tarted up the key matrix arrays
  *    7) Support key modifiers without keypresses (keypress of 0)
  *    8) Added a short delay between each key scan-row to mitigate capacitive coupling
+ * Mike : 28/7/2025
+ *    Updated to include auto button repeat.
+ * Mike : 30/7/2025
+ *    Removed all spurious delays
  */
 
 #include <Keyboard.h>
@@ -120,21 +124,8 @@ int const cPinsNo = 5;
 // Number of pins in the row array
 int const rPinsNo = 4;
 
-// number of milliseconds after simulating a key press/release
-int const keypressDelay = 50;
-
-// number of milliseconds after simulating a key press/release
-int const keyreleaseDelay = 50;
-
-// number of milliseconds before/after simulating a key modifier press
-int const modifierDelay = 50;
-
-// number of milliseconds before simulating a key modifier release
-int const modifierreleaseDelay = 50;
-
-
 // number of milliseconds delay between each keyboard column strobe, to minimise capacitive coupling noise
-int const decoupleDelay = 5;
+int const decoupleDelay = 1;
 
 // Array of pins for the columns
 int cPins[cPinsNo] = { 2, 3, 4, 5, 6 };
@@ -232,24 +223,25 @@ void loop()
           if (Codes[cPin][rPin].modifierCode != 0)
           {
             Keyboard.press(Codes[cPin][rPin].modifierCode);
-            delay(modifierDelay);
+//            delay(modifierDelay);
           }
 
           if (Codes[cPin][rPin].keyCode != 0)
           {
             // Press and release the keyboard button
             Keyboard.press(Codes[cPin][rPin].keyCode);
-            delay(keypressDelay);
-            Keyboard.release(Codes[cPin][rPin].keyCode);
-            delay(keyreleaseDelay);
+  //          delay(keypressDelay);
+  //          Keyboard.release(Codes[cPin][rPin].keyCode);
+  //          delay(keyreleaseDelay);
           }
 
           // Release the keyboard modifier, if applicable
-          if (Codes[cPin][rPin].modifierCode != 0)
-          {
-            delay(modifierreleaseDelay);
-            Keyboard.release(Codes[cPin][rPin].modifierCode);
-          }
+  //        if (Codes[cPin][rPin].modifierCode != 0)
+  //        {
+  //          delay(modifierreleaseDelay);
+  //          Keyboard.release(Codes[cPin][rPin].modifierCode);
+  //        }
+          Keyboard.releaseAll();
 
           // Update last known state of this switch
           if (Codes[cPin][rPin].repeat == true)
@@ -280,6 +272,5 @@ void loop()
       }
     }
     digitalWrite(cPins[cPin], HIGH);
-    delay(decoupleDelay);
   }
 }
