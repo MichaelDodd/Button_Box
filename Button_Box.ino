@@ -154,9 +154,7 @@ void loop()
               myKeyboard.press(Codes[keyScan.Col][keyScan.Row].modifierCode);
             }
             delay(10);
-            myKeyboard.press(Codes[keyScan.Col][keyScan.Row].keyCode);
-            delay(10);
-            if (Codes[keyScan.Col][keyScan.Row].modifierCode != 0)
+            if (Codes[keyScan.Col][keyScan.Row].keyCode != 0)
             {
               myKeyboard.press(Codes[keyScan.Col][keyScan.Row].keyCode);
               delay(10);
