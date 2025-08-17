@@ -149,8 +149,19 @@ void loop()
           else
           {
             // A non-repeat key is selected
-            myKeyboard.pressWithoutSending(Codes[keyScan.Col][keyScan.Row].modifierCode);
+            if (Codes[keyScan.Col][keyScan.Row].modifierCode != 0)
+            {
+              myKeyboard.press(Codes[keyScan.Col][keyScan.Row].modifierCode);
+            }
+            delay(10);
             myKeyboard.press(Codes[keyScan.Col][keyScan.Row].keyCode);
+            delay(10);
+            if (Codes[keyScan.Col][keyScan.Row].modifierCode != 0)
+            {
+              myKeyboard.press(Codes[keyScan.Col][keyScan.Row].keyCode);
+              delay(10);
+              myKeyboard.release(Codes[keyScan.Col][keyScan.Row].keyCode);
+            }
             delay(10);
             myKeyboard.releaseAll();
           }

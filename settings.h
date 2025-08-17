@@ -95,27 +95,11 @@ int const cPinsNo = 5;
 // Number of pins in the row array
 int const rPinsNo = 4;
 
-// number of milliseconds delay between each keyboard column strobe, to minimise capacitive coupling noise
-int const decoupleDelay = 1;
-
 // Array of pins for the columns
 int cPins[cPinsNo] = { 2, 3, 4, 5, 6 };
 
 // Array of pins for the rows
 int rPins[rPinsNo] = { 7, 8, 9, 10 };
-
-// Array for the last known switch states [cPinsNo][rPinsNo]
-//int colPrev[cPinsNo][rPinsNo] = { 0 };
-
-/*
-class Repeat_c
-{
-  typedef uint8_t Repeat_t;
-
-  Repeat_t const AUTO_REPEAT = 0;
-  Repeat_t const NO_REPEAT = 1;
-};
-*/
 
 // buttons
 //
@@ -139,7 +123,7 @@ typedef struct
 buttons const Codes[cPinsNo][rPinsNo] = 
 {
   { {KEY_LEFT_ARROW, NO_MODIFIER,AUTO_REPEAT}, {KEY_RIGHT_ARROW, NO_MODIFIER, AUTO_REPEAT},  {KEY_UP_ARROW, NO_MODIFIER, NO_REPEAT}, {KEY_DOWN_ARROW, NO_MODIFIER, NO_REPEAT} },
-  { {'e', NO_MODIFIER,    NO_REPEAT}          , {'f', NO_MODIFIER, NO_REPEAT},                {'g', KEY_LEFT_ALT, NO_REPEAT},         {'h', NO_MODIFIER, NO_REPEAT} },
+  { {'r', KEY_RIGHT_ALT,   NO_REPEAT}          , {'f', NO_MODIFIER, NO_REPEAT},                {'g', KEY_LEFT_ALT, NO_REPEAT},         {'h', NO_MODIFIER, NO_REPEAT} },
   { {'i', KEY_LEFT_SHIFT, NO_REPEAT}          , {'j', NO_MODIFIER, NO_REPEAT},                {'k', KEY_LEFT_ALT, NO_REPEAT},         {'l', NO_MODIFIER, NO_REPEAT} },
   { {'m', KEY_LEFT_SHIFT, NO_REPEAT}          , {'n', NO_MODIFIER, NO_REPEAT},                {'o', KEY_LEFT_ALT, NO_REPEAT},         {'p', NO_MODIFIER, NO_REPEAT} },
   { {'q', KEY_LEFT_SHIFT, NO_REPEAT}          , {'r', NO_MODIFIER, NO_REPEAT},                {'s', KEY_LEFT_ALT, NO_REPEAT},         {'t', NO_MODIFIER, NO_REPEAT} }

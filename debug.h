@@ -1,7 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#define DEBUG
+#undef DEBUG
 
 #ifdef DEBUG
     #define DEBUG_ENTRY(name)    Serial.print("DEBUG: "); Serial.print(logno++); Serial.print(".."); Serial.print(name); Serial.print( " Entered\n"); 
